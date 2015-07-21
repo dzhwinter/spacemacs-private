@@ -16,6 +16,9 @@
     '(
       ;; package names go here
       xclip
+      discover-my-major
+      helm-github-stars
+      deft
       ))
 
 ;; List of packages to exclude.
@@ -25,7 +28,25 @@
   (use-package xclip
     :defer t
     ))
+(defun configlayer/init-discover-my-major ()
+  (use-package discover-my-major
+    :defer t
+    :init
+    (progn
+      (evil-leader/set-key (kbd "mhm") 'discover-my-major)
+      (evilify makey-key-mode makey-key-mode-get-key-map ))))
 
+(defun configlayer/init-helm-github-stars ()
+  (use-package helm-github-stars
+    :defer t
+    :config
+    (progn
+      (setq helm-github-stars-username "dzhwinter")
+      (setq helm-github-stars-cache-file "~/.emacs.d/.cache/hgs-cache"))))
+(defun configlayer/post-init-deft ()
+  (setq deft-use-filter-string-for-filename t)
+  (evil-leader-set-key-mode 'deft-mode
+                            "mq" 'quit-window))
 ;; For each package, define a function configlayer/init-<package-name>
 ;;
 ;; (defun configlayer/init-my-package ()
