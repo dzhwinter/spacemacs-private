@@ -18,7 +18,7 @@
       xclip
       discover-my-major
       helm-github-stars
-      deft
+      org-octopress
       ))
 
 ;; List of packages to exclude.
@@ -27,7 +27,57 @@
 (defun configlayer/init-xclip ()
   (use-package xclip
     :defer t
+    :init
+    (defun copy-to-clipboard ()
+      "Copies selection to x-clipboard."
+      (interactive)
+      (if (display-graphic-p)
+          (progn
+            (message "Yanked region to x-clipboard!")
+            (call-interactively 'clipboard-kill-ring-save)
+            )
+        (if (region-active-p)
+            (progn
+              (shell-command-on-region (region-beginning) (region-end) "xsel -i -b")
+              (message "Yanked region to clipboard!")
+              (deactivate-mark))
+          (message "No region active; can't yank to clipboard!")))
+      )
+
+    (defun paste-from-clipboard ()
+      "Pastes from x-clipboard."
+      (interactive)
+      (if (display-graphic-p)
+          (progn
+            (clipboard-yank)
+            (message "graphics active")
+            )
+        (insert (shell-command-to-string "xsel -o -b"))
+        )
+      )
+
+    ;; (progn
+    ;;   (unless window-system
+    ;;     (defun xclip-cut-function (text &optional push)
+    ;;       (with-temp-buffer
+    ;;         (insert text)
+    ;;         (call-process-region (point-min) (point-max) "xclip" nil 0 nil "-i" "-selection" "clipboard")))
+    ;;     (defun xclip-paste-function()
+    ;;       (let ((xclip-output (shell-command-to-string "xclip -o -selection clipboard")))
+    ;;         (unless (string= (car kill-ring) xclip-output)
+    ;;           xclip-output ))
+    ;;       ;; (setq interprogram-cut-function 'xclip-cut-function)
+    ;;       ;; (setq interprogram-paste-function 'xclip-paste-function)
+    ;;       )))
+    :config
+    (xclip-mode t)
+    ;; (evil-leader/set-key (kbd "o y") 'xclip-cut-function)
+    ;; (evil-leader/set-key (kbd "o p") 'xclip-paste-function)
+    (evil-leader/set-key "o y" 'copy-to-clipboard)
+    (evil-leader/set-key "o p" 'paste-from-clipboard)
     ))
+
+
 (defun configlayer/init-discover-my-major ()
   (use-package discover-my-major
     :defer t
@@ -43,10 +93,28 @@
     (progn
       (setq helm-github-stars-username "dzhwinter")
       (setq helm-github-stars-cache-file "~/.emacs.d/.cache/hgs-cache"))))
-(defun configlayer/post-init-deft ()
-  (setq deft-use-filter-string-for-filename t)
-  (evil-leader-set-key-mode 'deft-mode
-                            "mq" 'quit-window))
+
+(defun configlayer/init-org-octopress ()
+  (use-package org-octopress
+    :init
+    (progn
+      (evilify org-octopress-summary-mode org-octopress-summary-mode-map)
+      (add-hook 'org-octopress-summary-mode-hook
+                '(lambda () (local-set-key (kbd "q") 'bury-buffer)))
+      (setq org-octopress-directory-top       "~/4gamers.cn/source")
+      (setq org-octopress-directory-posts     "~/4gamers.cn/source/_posts")
+      (setq org-octopress-directory-org-top   "~/4gamers.cn/source")
+      (setq org-octopress-directory-org-posts "~/4gamers.cn/source/blog")
+      (setq org-octopress-setup-file          "~/4gamers.cn/setupfile.org")
+      )))
+;; (defun configlayer/post-init-deft ()
+;;   (use-package deft
+;;     :defer t
+;;     :config
+;;     (progn
+;;       (setq deft-use-filter-string-for-filename t)
+;;       (evil-leader-set-key-mode 'deft-mode
+;;                                 "mq" 'quit-window))))
 ;; For each package, define a function configlayer/init-<package-name>
 ;;
 ;; (defun configlayer/init-my-package ()
