@@ -19,6 +19,7 @@
       discover-my-major
       helm-github-stars
       org-octopress
+      ;; smart-compile
       ))
 
 ;; List of packages to exclude.
@@ -107,6 +108,11 @@
       (setq org-octopress-directory-org-posts "~/4gamers.cn/source/blog")
       (setq org-octopress-setup-file          "~/4gamers.cn/setupfile.org")
       )))
+;; (defun configlayer/init-smart-compile ()
+;;   (use-package smart-compile
+;;     :init
+;;     (progn
+;;       )))
 ;; (defun configlayer/post-init-deft ()
 ;;   (use-package deft
 ;;     :defer t

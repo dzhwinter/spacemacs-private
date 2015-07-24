@@ -28,6 +28,7 @@
     ggtags
     rtags
     ws-butler
+    gdb-mi
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -52,7 +53,41 @@ which require an initialization must be listed explicitly in the list.")
         "mgA" 'projectile-find-other-file-other-window)
       (evil-leader/set-key-for-mode 'c++-mode
         "mga" 'projectile-find-other-file
-        "mgA" 'projectile-find-other-file-other-window))))
+        "mgA" 'projectile-find-other-file-other-window)
+
+      ;; http://emacswiki.org/emacs/CompileCommand
+      ;; auto generate configuration 
+      (add-hook 'c-mode-hook
+                (lambda ()
+                  (unless (file-exists-p "Makefile")
+                    (set (make-local-variable 'compile-command)
+                         ;; emulate make's .c.o implicit pattern rule, but with
+                         ;; different defaults for the CC, CPPFLAGS, and CFLAGS
+                         ;; variables:
+                         ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
+                         (let ((file (file-name-nondirectory buffer-file-name)))
+                           (format "%s -c -o %s.o %s %s %s"
+                                   (or (getenv "CC") "clang")
+                                   (file-name-sans-extension file)
+                                   (or (getenv "CPPFLAGS") "-DDEBUG=9")
+                                   (or (getenv "CFLAGS") "-ansi -pedantic -Wall -g")
+                                   file))))))
+      (add-hook 'c++-mode-hook
+                (lambda ()
+                  (unless (file-exists-p "Makefile")
+                    (set (make-local-variable 'compile-command)
+                         ;; emulate make's .c.o implicit pattern rule, but with
+                         ;; different defaults for the CC, CPPFLAGS, and CFLAGS
+                         ;; variables:
+                         ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
+                         (let ((file (file-name-nondirectory buffer-file-name)))
+                           (format "%s -c -o %s.o %s %s %s"
+                                   (or (getenv "CC") "clang++ -std=c++11")
+                                   (file-name-sans-extension file)
+                                   (or (getenv "CPPFLAGS") "-DDEBUG=9")
+                                   (or (getenv "CFLAGS") "-ansi -pedantic -Wall -g")
+                                   file))))))
+      )))
 
 (defun c-c++-enhance/init-cmake-mode ()
   (use-package cmake-mode
@@ -118,10 +153,10 @@ which require an initialization must be listed explicitly in the list.")
       :if (configuration-layer/package-usedp 'flycheck)
       :defer t
       :init (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))))
-  ;; (defun c-c++-enhance/post-flycheck-irony ()
-  ;;   (use-package flycheck
-  ;;     :defer t
-  ;;     :config (add-hook 'flycheck-mode-hook #'flycheck-irony-hook)))
+;; (defun c-c++-enhance/post-flycheck-irony ()
+;;   (use-package flycheck
+;;     :defer t
+;;     :config (add-hook 'flycheck-mode-hook #'flycheck-irony-hook)))
 (defun c-c++-enhance/init-ggtags ()
   (use-package ggtags
     :defer t))
@@ -145,30 +180,30 @@ which require an initialization must be listed explicitly in the list.")
     :config
     (progn
       (evil-leader/set-key-for-mode 'c++-mode
-        "mhi" 'helm-imenu
-        "mhd" 'helm-gtags-dwim
-        "mhr" 'helm-gtags-find-rtag
-        "mhs" 'helm-gtags-find-symbol
-        "mhf" 'helm-gtags-find-files)
+        "mgf" 'helm-imenu
+        "mgg" 'helm-gtags-dwim
+        "mgG" 'helm-gtags-find-rtag
+        "mgs" 'helm-gtags-find-symbol
+        "mgr" 'helm-gtags-find-files)
       (evil-leader/set-key-for-mode 'c-mode
-        "mhi" 'helm-imenu
-        "mhd" 'helm-gtags-dwim
-        "mhr" 'helm-gtags-find-rtag
-        "mhs" 'helm-gtags-find-symbol
-        "mhf" 'helm-gtags-find-files)
+        "mgf" 'helm-imenu
+        "mgg" 'helm-gtags-dwim
+        "mgG" 'helm-gtags-find-rtag
+        "mgs" 'helm-gtags-find-symbol
+        "mgr" 'helm-gtags-find-files)
       (evil-leader/set-key-for-mode 'python-mode
-        "mhi" 'helm-imenu
-        "mhd" 'helm-gtags-dwim
-        "mhr" 'helm-gtags-find-rtag
-        "mhs" 'helm-gtags-find-symbol
-        "mhf" 'helm-gtags-find-files))))
+        "mgf" 'helm-imenu
+        "mgg" 'helm-gtags-dwim
+        "mgG" 'helm-gtags-find-rtag
+        "mgs" 'helm-gtags-find-symbol
+        "mgr" 'helm-gtags-find-files))))
 
 (defun c-c++-enhance/init-ws-butler ()
   (use-package ws-butler
     :diminish ws-butler-mode
     :init(progn
-          (add-hook 'c-mode-common-hook 'ws-butler-mode)
-          (add-hook 'cython-mode-hook 'ws-butler-mode))))
+           (add-hook 'c-mode-common-hook 'ws-butler-mode)
+           (add-hook 'cython-mode-hook 'ws-butler-mode))))
 ;; (defun c-c++-enhance/init-company-c-headers ()
 ;;   (use-package company-c-headers
 ;;     :if (configuration-layer/package-usedp 'company)
@@ -255,3 +290,12 @@ which require an initialization must be listed explicitly in the list.")
       :if (configuration-layer/package-usedp 'company)
       :defer t
       :init (push 'company-c-headers company-backends-c-mode-common))))
+(defun c-c++/init-gdb-mi ()
+  (use-package gdb-mi
+    :defer t
+    :init
+    (setq
+     ;; use gdb-many-windows by default when `M-x gdb'
+     gdb-many-windows t
+     ;; Non-nil means display source file containing the main routine at startup
+     gdb-show-main t)))
