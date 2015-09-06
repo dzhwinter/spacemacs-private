@@ -19,6 +19,7 @@
       discover-my-major
       helm-github-stars
       org-octopress
+      which-key
       ;; smart-compile
       ))
 
@@ -70,7 +71,7 @@
     ;;       ;; (setq interprogram-cut-function 'xclip-cut-function)
     ;;       ;; (setq interprogram-paste-function 'xclip-paste-function)
     ;;       )))
-    :config
+    ;; :config
     (xclip-mode t)
     ;; (evil-leader/set-key (kbd "o y") 'xclip-cut-function)
     ;; (evil-leader/set-key (kbd "o p") 'xclip-paste-function)

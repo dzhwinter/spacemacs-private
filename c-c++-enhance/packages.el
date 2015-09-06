@@ -66,7 +66,7 @@ which require an initialization must be listed explicitly in the list.")
                          ;; variables:
                          ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
                          (let ((file (file-name-nondirectory buffer-file-name)))
-                           (format "%s -c -o %s.o %s %s %s"
+                           (format "%s -o %s.o %s %s %s"
                                    (or (getenv "CC") "clang")
                                    (file-name-sans-extension file)
                                    (or (getenv "CPPFLAGS") "-DDEBUG=9")
@@ -81,11 +81,11 @@ which require an initialization must be listed explicitly in the list.")
                          ;; variables:
                          ;; $(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
                          (let ((file (file-name-nondirectory buffer-file-name)))
-                           (format "%s -c -o %s.o %s %s %s"
-                                   (or (getenv "CC") "clang++ -std=c++11")
+                           (format "%s -o %s.o %s %s %s"
+                                   (or (getenv "CC") "g++")
                                    (file-name-sans-extension file)
-                                   (or (getenv "CPPFLAGS") "-DDEBUG=9")
-                                   (or (getenv "CFLAGS") "-ansi -pedantic -Wall -g")
+                                   (or (getenv "CPPFLAGS") " -DDEBUG=9")
+                                   (or (getenv "CFLAGS") "-ansi -pedantic -Wall -g -std=c++11")
                                    file))))))
       )))
 
