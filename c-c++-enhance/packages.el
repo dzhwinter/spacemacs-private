@@ -57,9 +57,16 @@ which require an initialization must be listed explicitly in the list.")
 
       ;; http://emacswiki.org/emacs/CompileCommand
       ;; auto generate configuration 
+
+      ;; set innamespace indent to 0
+      (defconst my-cc-style
+        '("cc-mode"
+          (c-offset-alist , ((innamespace . [0])))))
+      (c-add-style "my-cc-style" my-cc-style)
       (add-hook 'c-mode-hook
                 (lambda ()
                   (unless (file-exists-p "Makefile")
+                    A
                     (set (make-local-variable 'compile-command)
                          ;; emulate make's .c.o implicit pattern rule, but with
                          ;; different defaults for the CC, CPPFLAGS, and CFLAGS
