@@ -18,7 +18,7 @@
       xclip
       discover-my-major
       helm-github-stars
-      org-octopress
+      ;;org-octopress
       which-key
       ;; smart-compile
       ))
