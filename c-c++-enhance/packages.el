@@ -1,3 +1,4 @@
+;; spacemacs-private/c-c++-enhance/packages.el
 ;;; packages.el --- C/C++ Layer packages File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2014 Sylvain Benner
@@ -17,6 +18,7 @@
     company
     company-c-headers
     flycheck
+    stickyfunc-enhance
     ;; my custom package
     irony
     company-irony
@@ -28,11 +30,6 @@
     rtags
     ws-butler
     gdb-mi
-
-    ;; semantic
-    semantic
-    srefactor
-    stickyfunc-enhance
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -46,7 +43,7 @@ which require an initialization must be listed explicitly in the list.")
     :config
     (progn
       (require 'compile)
-      (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+      ;; (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
       (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
       (semantic-mode 1)
       (c-toggle-auto-newline 1)
@@ -106,30 +103,28 @@ which require an initialization must be listed explicitly in the list.")
     :init (push 'company-cmake company-backends-cmake-mode)))
 
 (defun c-c++-enhance/post-init-flycheck ()
-  (add-to-hook 'flycheck-mode '(c-mode-hook))
-  (add-to-hook 'flycheck-mode '(c++-mode-hook))
-  )
+  (spacemacs/add-to-hooks 'flycheck-mode '(c-mode-hook c++-mode-hook)))
 
-;; (defun c-c++-enhance/init-srefactor ()
-;;   (use-package srefactor
-;;     :defer t
-;;     :init
-;;     (progn
-;;       (evil-leader/set-key-for-mode 'c-mode
-;;         "mr" 'srefactor-refactor-at-point)
-;;       (evil-leader/set-key-for-mode 'c++-mode
-;;         "mr" 'srefactor-refactor-at-point))))
+(defun c-c++-enhance/init-srefactor ()
+  (use-package srefactor
+    :defer t
+    :init
+    (progn
+      (evil-leader/set-key-for-mode 'c-mode
+        "mr" 'srefactor-refactor-at-point)
+      (evil-leader/set-key-for-mode 'c++-mode
+        "mr" 'srefactor-refactor-at-point))))
 
-;; (defun c-c++-enhance/init-stickyfunc-enhance ()
-;;   (use-package stickyfunc-enhance
-;;     :defer t
-;;     :init
-;;     (progn
-;;       (defun spacemacs/lazy-load-stickyfunc-enhance ()
-;;         "Lazy load the package."
-;;         (require 'stickyfunc-enhance))
-;;       (add-to-hooks 'spacemacs/lazy-load-stickyfunc-enhance
-;;                     '(c-mode-hook c++-mode-hook)))))
+(defun c-c++-enhance/init-stickyfunc-enhance ()
+  (use-package stickyfunc-enhance
+    :defer t
+    :init
+    (progn
+      (defun spacemacs/lazy-load-stickyfunc-enhance ()
+        "Lazy load the package."
+        (require 'stickyfunc-enhance))
+      (spacemacs/add-to-hooks 'spacemacs/lazy-load-stickyfunc-enhance
+                    '(c-mode-hook c++-mode-hook)))))
 ;;define my init hook
 (defun c-c++-enhance/post-init-google-c-style ()
   (use-package google-c-style
@@ -170,9 +165,9 @@ which require an initialization must be listed explicitly in the list.")
 ;;   (use-package flycheck
 ;;     :defer t
 ;;     :config (add-hook 'flycheck-mode-hook #'flycheck-irony-hook)))
-;; (defun c-c++-enhance/init-ggtags ()
-;;   (use-package ggtags
-;;     :defer t))
+(defun c-c++-enhance/init-ggtags ()
+  (use-package ggtags
+    :defer t))
 (defun c-c++-enhance/init-rtags ()
   (use-package rtags
     :init (require 'company-rtags)
@@ -180,36 +175,36 @@ which require an initialization must be listed explicitly in the list.")
 (defun c-c++-enhance/init-helm-make ()
   (use-package helm-make
     :defer t))
-;; (defun c-c++-enhance/init-helm-gtags ()
-;;   (use-package helm-gtags
-;;     :diminish helm-gtags-mode
-;;     :init(progn
-;;            (add-hook 'c-common-hook 'helm-gtags-mode)
-;;            (setq helm-gtags-ignore-case t
-;;                  helm-gtags-auto-update t
-;;                  helm-gtags-use-input-at-cursor t
-;;                  helm-gtags-pulse-at-cursor t))
-;;     :defer t
-;;     :config
-;;     (progn
-;;       (evil-leader/set-key-for-mode 'c++-mode
-;;         "mgf" 'helm-imenu
-;;         "mgg" 'helm-gtags-dwim
-;;         "mgG" 'helm-gtags-find-rtag
-;;         "mgs" 'helm-gtags-find-symbol
-;;         "mgr" 'helm-gtags-find-files)
-;;       (evil-leader/set-key-for-mode 'c-mode
-;;         "mgf" 'helm-imenu
-;;         "mgg" 'helm-gtags-dwim
-;;         "mgG" 'helm-gtags-find-rtag
-;;         "mgs" 'helm-gtags-find-symbol
-;;         "mgr" 'helm-gtags-find-files)
-;;       (evil-leader/set-key-for-mode 'python-mode
-;;         "mgf" 'helm-imenu
-;;         "mgg" 'helm-gtags-dwim
-;;         "mgG" 'helm-gtags-find-rtag
-;;         "mgs" 'helm-gtags-find-symbol
-;;         "mgr" 'helm-gtags-find-files))))
+(defun c-c++-enhance/init-helm-gtags ()
+  (use-package helm-gtags
+    :diminish helm-gtags-mode
+    :init(progn
+           (add-hook 'c-common-hook 'helm-gtags-mode)
+           (setq helm-gtags-ignore-case t
+                 helm-gtags-auto-update t
+                 helm-gtags-use-input-at-cursor t
+                 helm-gtags-pulse-at-cursor t))
+    :defer t
+    :config
+    (progn
+      (evil-leader/set-key-for-mode 'c++-mode
+        "mgf" 'helm-imenu
+        "mgg" 'helm-gtags-dwim
+        "mgG" 'helm-gtags-find-rtag
+        "mgs" 'helm-gtags-find-symbol
+        "mgr" 'helm-gtags-find-files)
+      (evil-leader/set-key-for-mode 'c-mode
+        "mgf" 'helm-imenu
+        "mgg" 'helm-gtags-dwim
+        "mgG" 'helm-gtags-find-rtag
+        "mgs" 'helm-gtags-find-symbol
+        "mgr" 'helm-gtags-find-files)
+      (evil-leader/set-key-for-mode 'python-mode
+        "mgf" 'helm-imenu
+        "mgg" 'helm-gtags-dwim
+        "mgG" 'helm-gtags-find-rtag
+        "mgs" 'helm-gtags-find-symbol
+        "mgr" 'helm-gtags-find-files))))
 
 (defun c-c++-enhance/init-ws-butler ()
   (use-package ws-butler
@@ -303,7 +298,7 @@ which require an initialization must be listed explicitly in the list.")
       :if (configuration-layer/package-usedp 'company)
       :defer t
       :init (push 'company-c-headers company-backends-c-mode-common)))
-  (defun c-c++-enhance/init-gdb-mi ()
+  (defun c-c++/init-gdb-mi ()
     (use-package gdb-mi
       :defer t
       :init
@@ -311,23 +306,4 @@ which require an initialization must be listed explicitly in the list.")
        ;; use gdb-many-windows by default when `M-x gdb'
        gdb-many-windows t
        ;; Non-nil means display source file containing the main routine at startup
-       gdb-show-main t)))
-
-  (defun c-c++-enhance/post-init-helm-gtags ()
-    (spacemacs/helm-gtags-define-keys-for-mode 'c-mode)
-    (spacemacs/helm-gtags-define-keys-for-mode 'c++-mode))
-
-  (defun c-c++-enhance/post-init-semantic ()
-    (semantic/enable-semantic-mode 'c-mode)
-    (semantic/enable-semantic-mode 'c++-mode))
-
-  (defun c-c++-enhance/post-init-srefactor ()
-    (evil-leader/set-key-for-mode 'c-mode "mr" 'srefactor-refactor-at-point)
-    (evil-leader/set-key-for-mode 'c++-mode "mr" 'srefactor-refactor-at-point)
-    (spacemacs/add-to-hook 'spacemacs/lazy-load-srefactor '(c-mode-hook ))
-    (spacemacs/add-to-hook 'spacemacs/lazy-load-srefactor '(c++-mode-hook)))
-
-  (defun c-c++-enhance/post-init-stickyfunc-enhance ()
-    (spacemacs/add-to-hook 'spacemacs/lazy-load-stickyfunc-enhance '(c-mode-hook))
-    (spacemacs/add-to-hook 'spacemacs/lazy-load-stickyfunc-enhance '(c++-mode-hook))
-    ))
+       gdb-show-main t))))
