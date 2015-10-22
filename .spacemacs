@@ -47,6 +47,7 @@ values."
      github
      deft
      ansible
+     yaml
 
      ;;my private
      ;; c-c++-more-enhance
