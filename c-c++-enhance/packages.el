@@ -20,8 +20,10 @@
     flycheck
     stickyfunc-enhance
     ;; my custom package
+    ;; company 
     irony
     company-irony
+    ;; flycheck 
     flycheck-irony
     google-c-style
     helm-make

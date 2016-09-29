@@ -24,38 +24,23 @@ values."
      ;; --------------------------------------------------------
      ;; language
      python
-     lua                                ;
-     go
-     sql
-     haskell
-     scala
-     javascript
+     ;; sql
      markdown
-     org
-     ;; c-c++
      better-defaults
-
-     ;; c-c++ packages
-     gtags
-     ;; ycmd
-     semantic
-     
+     c-c++
+     ycmd
+     rust
+     go
      ;; system enhance
+     osx
      auto-completion
      git
-     syntax-checking
+     ;; syntax-checking
      github
-     deft
-     ansible
-
-     ;;my private
-     ;; c-c++-more-enhance
-     c-c++-enhance
-     ;; config-chinese
-     ;; lua-enhance
-     configlayer
+     ;; deft
+     yaml
+     ;;configlayer
      ;; chinese
-     ;;ycmd
 
      )
    ;; List of additional packages that will be installed without being
@@ -63,12 +48,17 @@ values."
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(
+                                      matlab-mode
                                       cuda-mode)
+
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
      git-gutter
+     git-gutter-fringe
      evil-terminal-cursor-changer
-     org-pomodoro
+     flx-ido
+     semantic
+     org-plus-contrib
      )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -117,7 +107,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -219,13 +209,15 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  (setq-default rust-enable-racer t)
+  
   )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-  (setq-default dotspacemacs-configuration-layers '(auto-completion
+  (setq-default dotspacemacs-configuration-layers '(auto-completion :variables auto-completion-enable-help-tooltip t
                                                     (org :variables
                                                          org-enable-github-support t)
                                                     (python :variables python-enable-yapf-format-on-save t)
@@ -233,11 +225,9 @@ layers configuration."
                                                     (c-c++ :variables
                                                            c-c++-default-mode-for-headers 'c++-mode
                                                            c-c++-enable-clang-support t)
-                                                    (haskell :variables
-                                                             haskell-enable-ghci-ng-support t
-                                                             haskell-enable-shm-support t
-                                                             haskell-enable-hindent-style "johan-tibell")
-                                                    ))
+                                                    (go :variables go-use-gometalinter t
+                                                        gofmt-command "goimports"
+                                                        go-tab-width 2)))
   ;; additional packages
   ;; cuda-mode
   (use-package cuda-mode
@@ -255,44 +245,80 @@ layers configuration."
           ))
 
   ;; language setup
+
   ;; go lang format
+  (setq gofmt-command "goimports")
+  (setq go-tab-width 2)
+  
+  
+  (defconst my-cc-style
+    '("gnu"
+      (c-offsets-alist . ((innamespace . 0)))))
+  (c-add-style "my-cc-style" my-cc-style)
+
+  (add-hook 'c++-mode-hook
+            (lambda ()
+              ;; quick compilation
+              (set (make-local-variable 'compile-command)
+                   (concat "g++ -std=c++11 -Wall " buffer-file-name " && ./a.out"))
+              ;; (push 'company-semantic company-backends)
+              (setq company-clang-arguments '("-std=c++11"))
+              (setq flycheck-clang-language-standard "c++11")
+              (setq flycheck-gcc-language-standard "c++11")))
+  
   (add-hook 'before-save-hook #'gofmt-before-save)
   
   ;; python flycheck
+  (setq python-shell-interpreter "python")
+  (setq-default python-indent-offset 2)
+  (setq python-shell-prompt-detect-failure-warning nil)
   (remove-hook 'python-mode-hook 'flycheck-mode)
-  ;; (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (remove-hook 'c++-mode-hook 'flycheck-mode)
+  (setq flycheck-check-syntax-automatically '(mode-enabled save))
   
-  ;; (setq org-agenda-custom-commands
-  ;;       '(()))
-  ;; org mode enhance
-  (setq org-agenda-files (list  "~/.deft/gtd.org" "~/.deft/TODO.org" "~/.deft/journal.org"  "~/.deft/notes.org" "~/.deft/book.org"))
-  (setq deft-use-filename-as-title t)
-  (setq deft-extension "org")
+  ;; (setq org-agenda-files (list  "~/.deft/gtd.org" "~/.deft/TODO.org" "~/.deft/journal.org"  "~/.deft/notes.org" "~/.deft/book.org"))
+  ;; (setq deft-use-filename-as-title t)
+  ;; (setq deft-extension "org")
   ;; (setq deft-text-mode 'org-mode)
 
   (global-company-mode t)
+  (global-linum-mode t)
+  (setq dotspacemacs-distinguish-gui-tab t)
+  ;; (define-key evil-motion-state-map [C-i] 'evil-jump-forward)
+  (global-set-key (kbd "C-i") 'evil-jump-forward)
 
   (spacemacs|disable-company eshell-mode)
   
   (spacemacs|disable-company debugger-mode)
-  ;;(spacemacs|disable-company python-mode)
-  ;;(spacemacs|disable-company anaconda-mode)
+  ;; (spacemacs|disable-company python-mode)
+  ;; (spacemacs|disable-company anaconda-mode)
   ;; set up proxy
   (setenv "NO_PROXY" "127.0.0.1")
   (setenv "no_proxy" "127.0.0.1")
+  (setenv "http_proxy" "")
+  (setenv "https_proxy" "")
   ;; set path for tern-activity-since-command
-  (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+  ;; (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+  ;; (setenv "PYTHONPATH" (concat "/usr/local/bin:" (getenv "PATH")))
   (setq evil-emacs-state-cursor '("chartreuse3 " (bar . 2)))
+  ;;set python virtual env for anaconda mode
+  ;; (setq python-shell-virtualenv-path "/home/q/anaconda/")
+  ;; (setq python-shell-virtualenv-path "/data01/home/dongzhihong/env/")
+
 
   ;; chinese input 
   ;; (spacemacs//set-monospaced-font   "Source Code Pro" "WenQuan Micro Hei Mono" 13 15)
   (global-set-key (kbd "C-c x") 'org-capture)
+  (global-set-key (kbd "C-x C-f") 'ido-find-file)
   (evil-leader/set-key (kbd "od") 'youdao-dictionary-search-at-point+)
   (evil-leader/set-key (kbd "ff") 'helm-for-files)
   (global-set-key (kbd "<f9>") 'compile)
   
   ;; (setq-default dotspacemacs-configuration-layers '(github))
-  
+  ;; set for mac
+  ;; this section is set for mac osx only
+  (set-face-attribute 'default nil :height 145)
+  (setq multi-term-program "/bin/zsh")
   ;; (xclip-mode t)
   ;; cursor style default as bar
   ;; (setq-default cursor-type 'bar) 
@@ -300,15 +326,57 @@ layers configuration."
   ;; (setq evil-emacs-state-cursor '("SkyBlue2" bar))
   ;; (setq evil-default-cursor '("SkyBlue2" bar))
   
+  ;; set mouse copy/paste
+  (xterm-mouse-mode -1)
+  (setq x-select-enable-clipboard t)
   ;; (setq )
   ;; config for ycmd
-  (set-variable 'ycmd-server-command '("python" "/home/dzh/Downloads/ycmd/ycmd/"))
+  (set-variable 'ycmd-server-command '("python" "/Users/dzh/github/ycmd/ycmd/"))
+  (set-variable 'ycmd-extra-conf-handler 'load)
+  
+  ;; (setq-default yas-snippet-dirs '("~/.emacs.d/private/snippets"))
+  ;; (setq-default auto-completion-private-snippets-directory "~/.emacs.d/private/snippets")
+  ;; (custom-set-variables
+  ;;   '(yas-snippet-dirs '("~/.emacs.d/private/snippets")))
+  
+  (defun expand-yasnippet-brief ()
+    "Expand the yasnippet named `foobar'."
+    (interactive)
+      (yas-expand-snippet (yas-lookup-snippet "Brief Function")))
+
+  ;; (defun expand-yasnippet-brief2 ()
+  ;;   "Expand the yasnippet named `foobar'."
+  ;;   (interactive)
+  ;;   (yas-expand-snippet (yas-lookup-snippet " Function description")))
+
+  (defun expand-yasnippet-verbose ()
+    "Expand the yasnippet named `foobar'."
+    (interactive)
+    (yas-expand-snippet (yas-lookup-snippet "Verbose Function")))
+
+  ;; (evil-leader/set-key (kbd "ibf") 'expand-yasnippet-brief2)
+  (evil-leader/set-key (kbd "ib") 'expand-yasnippet-brief)
+  (evil-leader/set-key (kbd "iv") 'expand-yasnippet-verbose)
   ;; (set-variable 'ycmd-global-config "/home/dzh/Downloads/ycmd/cpp/ycm/.ycm_exltra_conf.py")
   ;; (set-variable 'ycmd-global-config '("python" "/home/dzh/.emacs.d/contrib/ycmd/global_conf.py"))
   ;; (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
   ;; (add-to-list 'auto-mode-alist '("\\.cuh\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.proto\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\.thrift\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\SConstruct\\'" . python-mode))
+  (add-to-list 'auto-mode-alist '("\\BUILD\\'" . python-mode))
+  (add-to-list 'auto-mode-alist '("\\.bzl\\'" . python-mode))
+  (add-to-list 'auto-mode-alist '("\\.cuh\\'" . cuda-mode))
+
+  (defconst my-cc-style
+    '("cc-mode"
+      (c-offsets-alist . ((innamespace . [0])))))
+
+  (c-add-style "my-cc-mode" my-cc-style)
+  (setq c-default-style '((c-mode . "my-cc-style")
+                          (c++-mode . "my-cc-style")))
+
   ;; (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   ;;(add-to-list 'auto-mode-alist '("\\.hpp\\'" . c++-mode))
   ;; (add-to-list 'company-c-headers-path-system "/usr/local/cuda/include/") ;

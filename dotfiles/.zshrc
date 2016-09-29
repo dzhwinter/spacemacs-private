@@ -1,15 +1,18 @@
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export ZSH=/Users/dzh/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-# ZSH_THEME="robbyrussell"
-ZSH_THEME="bira"
+ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -46,13 +49,16 @@ ZSH_THEME="bira"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git autojump)
-source $ZSH/oh-my-zsh.sh
+plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
+
+export GOPATH=$HOME/.go
+export PATH=$PATH:$GOPATH/bin
+source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -77,112 +83,44 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/g
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias host="ssh -p 6006 dzh@219.224.166.173"
+alias server2="ssh -Y -p 5004 dongzhihong@219.224.166.130"
+alias server="ssh -Y dzh@192.168.0.138"
+alias dzhvpn="ssh dzh@45.55.26.243"
+alias CXX="clang++ -std=c++11"
+alias CC="clang"
+alias bytedance="ssh dongzhihong@10.6.131.76"
+alias byte76="ssh chenshini@10.6.131.76"
+alias cxx="clang++ -std=c++11"
+alias host="ssh -p 5008 dzh@219.224.166.174"
 
-# added by Anaconda 2.0.1 installer
-# export PATH="/usr/local/anaconda/bin:$PATH"
-#set up path and include, library path
+alias mserver="sudo sshfs -o transform_symlinks -ofollow_symlinks  dongzhihong@10.6.131.76:/data01/home/dongzhihong /Users/dzh/mnt/dev1"
+alias umserver="sudo umount -f /Users/dzh/mnt/dev1"
+alias ycm="/Users/dzh/github/YCM-Generator/config_gen.py"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export CMAKE_C_COMPILER="/usr/bin/gcc"
+export CMAKE_CXX_COMPILER="/usr/bin/g++"
+export CC="/usr/bin/gcc"
+export CXX="/usr/bin/g++"
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/site-packages
+alias relay="ssh dongzhihong01@relay01.baidu.com"
 
-# TERM
-export TERM=xterm-256color
-# EMACS default shell in ansi-term
-export ESHELL=/usr/bin/zsh
+# export GOROOT=/Users/dzh/github/go-go1.6.2
+export GOROOT=/usr/local/Cellar/go/1.6.2/libexec
+export PATH=$GOROOT/bin:$PATH
+export GOPATH=/Users/dzh/.go
+export PATH=$GOPATH/bin:$PATH
+export GOPATH=$GOPATH:/Users/dzh/code/6.824
+alias cc="clang++ -std=c++11"
+export https_proxy="http://hyatt.usv3-h.xduotai.com:10534"
+export http_proxy=$https_proxy
+# export GOPATH=/Users/dzh/code/6.824:$GOPATH
+# export GOPATH=/Users/dzh/code/golang/work:$GOPATH
+# export PATH=$GOPATH/bin:$PATH
+export HOMEBREW_CASK_OPTS="--caskroom=/etc/Caskroom"
+export https_proxy=""
+export PATH=${PATH}:/Users/dzh/IdeaProjects/spark/bin/
 
-export PATH=/usr/local/MATLAB/R2013b/bin:$PATH
-export PATH=/usr/local/cuda/bin:$PATH
-export PATH=$PATH:/usr/local/nginx/sbin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/
-#
-#
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib/x86_64-linux-gnu/lib
-export CPP_INCLUDE_PATH=$CPP_INCLUDE_PATH:/usr/include/opencv
-export CPP_INCLUDE_PATH=$CPP_INCLUDE_PATH:/opt/intel/composer_xe_2015.2.164/mkl/include
-export LDFLAGS="-L/usr/lib -L/usr/local/lib"
-export LIBRARY_PATH=$LIBRARY_PATH:/usr/lib/x86_64-linux-gnu
-#export PATH=/home/dzh/torch/install/bin:$PATH  # Added automatically by torch-dist
-#export LD_LIBRARY_PATH=/home/dzh/torch/install/lib:$LD_LIBRARY_PATH  # Added automatically by torch-dist
-export MW_NVCC_PATH=/usr/local/cuda/bin/nvcc
-#
-#
-export EDITOR="vim"
-export LDFLAGS="$LDFLAGS -lm"
-#
-#set up third party path
-export CAFFE_HOME=/home/dzh/Downloads/caffe_video/build/tools/
-export PYTHONPATH=$PYTHONPATH:/home/dzh/Downloads/caffe_video/python
-export PYTHONPATH=$PYTHONPATH:/home/dzh/Downloads/cxxnet/wrapper
-export PYTHONPATH=/usr/lib/python2.7/lib-dynload:$PYTHONPATH
-
-#
-#export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:
-alias ohmyzsh="mate ~/.oh-my-zsh"
-export PATH="/usr/local/bin/:$PATH"
-# plugins
-# autojump
-[[ -s /home/dzh/.autojump/etc/profile.d/autojump.sh ]] && source /home/dzh/.autojump/etc/profile.d/autojump.sh
-
-autoload -U compinit && compinit -u
-
-# note parse arguments to generate the clang_compete file. use /usr/local/bin/cc_args.py 
-alias clang++="clang++ -std=c++11"
-alias clang="clang -std=c++11"
-# export CC="clang++"
-export PATH=$PATH:/home/dzh/anaconda/bin
-alias temacs="TERM=xterm-256color emacs --daemon"
-alias te="TERM=xterm-256color emacsclient -nw"
-alias e='emacsclient -c'
-alias -s html='emacs -e --client'
-alias nw='emacsclient -nw'
-alias o='xdg-open'
-alias sh='ssh -X dzh@192.168.0.138'
-alias findetags='find . -regex ".*\.\(cpp\|h\|hpp\|cu\|py\)"'
-#export PATH="/home/dzh/anaconda/bin:$PATH"
-
-#CXXNET PATH
-export CXXNET_WRAPPER_PATH="/home/dzh/Downloads/cxxnet/wrapper/"
-export CXXNET_PATH="/home/dzh/Downloads/cxxnet"
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dzh/Downloads/cxxnet/
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-7.0/lib64
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/composer_xe_2015.2.164/compiler/lib/intel64
-#configureation for  intel mkl
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/composer_xe_2015.2.164/mkl/lib/intel64
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dzh/Downloads/caffe_video/build/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dzh/Downloads/parameter_server/third_party/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dzh/Downloads/cxxnet/wrapper
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
-export PATH=$PATH:/home/dzh/Downloads/cxxnet/bin
-# export CPPFLAGS=                # 
-
-#export nodejs
-# export PATH=$PATH:/
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/lib/x86_64-linux-gnu/pkgconfig
-
-# configuration for caffe
-export PATH=$PATH:/home/dzh/Downloads/caffe_video/build/tools
-
-# cxxnet wrapper  
-export PYTHONPATH=$PYTHONPATH:/home/dzh/Downloads/cxxnet-master/wrapper
-# go lang
-export GOROOT=/home/dzh/Downloads/golang
-export GOPATH=/home/dzh/gocode
-export PATH=$PATH:$GOPATH/bin
-export PATH=~/.cabal/bin/:$PATH
-
-#lua
-export PATH=/home/dzh/torch/install/bin:$PATH  # Added automatically by torch-dist
-export LD_LIBRARY_PATH=/home/dzh/torch/install/lib:$LD_LIBRARY_PATH  # Added automatically by torch-dist
-alias irip="ssh -X dzh@191.168.0.138"
-alias sh136="ssh -XY -p 5006 dzh@192.168.0.136"
-alias cmake="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-# tmux setup
-alias tmux="TERM=xterm-256color tmux"
-# setup for the z.sh
-# . /home/dzh/z/z.sh
-alias vcl="cvlc --x11-display localhost:11.0"
-alias shvpn="ssh dzh@45.55.26.243"
-alias lsh="ssh -p 5004 dongzhihong@219.224.166.130"
-
-
-export PATH=/home/dzh/torch/install/bin:$PATH  # Added automatically by torch-dist
-export LD_LIBRARY_PATH=/home/dzh/torch/install/lib:$LD_LIBRARY_PATH  # Added automatically by torch-dist
+alias idev="ssh dongzhihong01@cq01-rdqa-dev004.cq01"
