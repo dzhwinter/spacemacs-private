@@ -81,22 +81,7 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias host="ssh -p 6006 dzh@219.224.166.173"
-alias server2="ssh -Y -p 5004 dongzhihong@219.224.166.130"
-alias server="ssh -Y dzh@192.168.0.138"
-alias dzhvpn="ssh dzh@45.55.26.243"
-alias CXX="clang++ -std=c++11"
-alias CC="clang"
-alias bytedance="ssh dongzhihong@10.6.131.76"
-alias byte76="ssh chenshini@10.6.131.76"
-alias cxx="clang++ -std=c++11"
-alias host="ssh -p 5008 dzh@219.224.166.174"
 
-alias mserver="sudo sshfs -o transform_symlinks -ofollow_symlinks  dongzhihong@10.6.131.76:/data01/home/dongzhihong /Users/dzh/mnt/dev1"
-alias umserver="sudo umount -f /Users/dzh/mnt/dev1"
 alias ycm="/Users/dzh/github/YCM-Generator/config_gen.py"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -105,22 +90,3 @@ export CMAKE_CXX_COMPILER="/usr/bin/g++"
 export CC="/usr/bin/gcc"
 export CXX="/usr/bin/g++"
 export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/site-packages
-alias relay="ssh dongzhihong01@relay01.baidu.com"
-
-# export GOROOT=/Users/dzh/github/go-go1.6.2
-export GOROOT=/usr/local/Cellar/go/1.6.2/libexec
-export PATH=$GOROOT/bin:$PATH
-export GOPATH=/Users/dzh/.go
-export PATH=$GOPATH/bin:$PATH
-export GOPATH=$GOPATH:/Users/dzh/code/6.824
-alias cc="clang++ -std=c++11"
-export https_proxy="http://hyatt.usv3-h.xduotai.com:10534"
-export http_proxy=$https_proxy
-# export GOPATH=/Users/dzh/code/6.824:$GOPATH
-# export GOPATH=/Users/dzh/code/golang/work:$GOPATH
-# export PATH=$GOPATH/bin:$PATH
-export HOMEBREW_CASK_OPTS="--caskroom=/etc/Caskroom"
-export https_proxy=""
-export PATH=${PATH}:/Users/dzh/IdeaProjects/spark/bin/
-
-alias idev="ssh dongzhihong01@cq01-rdqa-dev004.cq01"
